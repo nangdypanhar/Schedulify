@@ -1,9 +1,21 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 # Schedulify
+
+Web-application that is built with **React** and **Vite**.
+
+## Steps to Run the Project
+
+1. clone the repository :
+ ```
+    https://github.com/nangdypanhar/Schedulify.git
+ ```
+
+2. Install the Dependencies and run the project :
+```
+    npm install
+    npm run dev
+```
+
+## Important Notes:
+- You need to have **Node.js** installed (version 18 or higher) on your computer before installing the project.
+- To download Node.js, visit: [Node.js Download](https://nodejs.org/en/download)
+- **Port 3000** is default port for this application.
