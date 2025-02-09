@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { GoSignOut } from "react-icons/go";
 
-const NavItem = ({ to, children, active = false }) => {
+const NavItem = ({ to, children }) => {
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
+
   const listStyleMenu =
-    "block py-2 px-3 text-gray-900 rounded-sm  md:p-0  md:dark:hover:text-blue-500";
+    "block py-2 px-3 text-gray-900 rounded-sm md:p-0 md:dark:hover:text-blue-500";
 
   return (
     <li>
       <Link
         to={to}
         className={
-          active
-            ? "block py-2 px-3 text-gray-900  bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+          isActive
+            ? "block py-2 px-3 text-gray-900 bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
             : listStyleMenu
         }
       >
@@ -32,8 +37,8 @@ const Navbar = () => {
     <header>
       <nav className="bg-white border-gray-200 shadow-md">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a
-            href="https://flowbite.com/"
+          <Link
+            to="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
             <img
@@ -44,7 +49,7 @@ const Navbar = () => {
             <span className="self-center text-2xl font-semibold whitespace-nowrap ">
               Schedulify
             </span>
-          </a>
+          </Link>
 
           {/* Profile & Mobile Menu Button */}
           <div className="relative flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -86,8 +91,9 @@ const Navbar = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={listStyleProfile}>
-                    Sign Out
+                
+                  <a href="#" className= {listStyleProfile}>
+                    Sign Out  <span className="float-right"><GoSignOut /></span>
                   </a>
                 </li>
               </ul>
@@ -127,10 +133,8 @@ const Navbar = () => {
             } items-center justify-between w-full md:flex md:w-auto md:order-1`}
             id="navbar-user"
           >
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white  dark:border-gray-700">
-              <NavItem to="/" active={true}>
-                Home
-              </NavItem>
+            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-500 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white  dark:border-gray-700">
+              <NavItem to="/">Home</NavItem>
               <NavItem to="/myschedule">My Schedule</NavItem>
               <NavItem to="/about">About</NavItem>
             </ul>
