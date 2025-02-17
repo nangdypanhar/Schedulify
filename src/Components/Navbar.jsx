@@ -41,11 +41,6 @@ const Navbar = () => {
             to="/"
             className="flex items-center space-x-3 rtl:space-x-reverse"
           >
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8"
-              alt="Schedulify Logo"
-            />
             <span className="self-center text-2xl font-semibold whitespace-nowrap ">
               Schedulify
             </span>
@@ -56,7 +51,7 @@ const Navbar = () => {
             {/* Profile Button */}
             <button
               type="button"
-              className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 cursor-pointer"
               id="user-menu-button"
               aria-expanded={toggleProfile}
               onClick={() => setToggleProfile((prev) => !prev)}
