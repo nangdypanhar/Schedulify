@@ -10,7 +10,6 @@ import NotFoundPage from "./views/NotFoundPage/NotFoundPage.jsx";
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<AboutPage />} />
