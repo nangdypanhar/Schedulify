@@ -10,12 +10,13 @@ import NotFoundPage from "./views/NotFoundPage/NotFoundPage.jsx";
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/myschedule" element={<MySchedulePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
