@@ -26,6 +26,7 @@ const MySchedulePage = () => {
     .sort((a, b) => convertTo24Hour(a.time.split(" - ")[0]) - convertTo24Hour(b.time.split(" - ")[0]));
 
   return (
+    
     <main className="max-w-screen-xl mx-auto p-4 flex flex-col gap-7 mt-5">
       <h1 className="text-3xl font-bold">My Schedule</h1>
       <Table headers={headers} rows={schedule} />
