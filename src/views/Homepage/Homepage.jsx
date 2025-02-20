@@ -1,19 +1,16 @@
+import React from "react";
 import Card from "../../Components/Card";
-import { useState } from "react";
+import { fetchHomepage } from "../../service/HomepageData";
+import { useState,useEffect } from "react";
+
 
 const Homepage = () => {
-  const schedules = [
-    { id: 1, Gen: 9, Specialize: "Software Engineer", Group: 2 },
-    { id: 2, Gen: 10, Specialize: "Data Scientist", Group: 3 },
-    { id: 3, Gen: 9, Specialize: "Product Manager", Group: 2 },
-    { id: 4, Gen: 11, Specialize: "UI/UX Designer", Group: 1 },
-    { id: 5, Gen: 10, Specialize: "Backend Developer", Group: 4 },
-    { id: 6, Gen: 12, Specialize: "Frontend Developer", Group: 5 },
-    { id: 7, Gen: 9, Specialize: "Business Analyst", Group: 3 },
-    { id: 8, Gen: 11, Specialize: "DevOps Engineer", Group: 4 },
-    { id: 9, Gen: 12, Specialize: "Full Stack Developer", Group: 1 },
-    { id: 10, Gen: 10, Specialize: "Machine Learning Engineer", Group: 2 },
-  ];
+
+  const [homeData,setHomeData]= useState([])
+
+  useEffect(()=>{
+    fetchHomepage().then(setHomeData).catch(console.error)
+  },[])
 
   return (
     <main className="max-w-screen-xl mx-auto p-4 flex flex-col gap-7">
@@ -46,7 +43,7 @@ const Homepage = () => {
       {/* bottom-grid */}
 
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 place-items-center">
-        {schedules.map((schedule) => (
+        {homeData.map((schedule) => (
           <Card
             key={schedule.id}
             gen={schedule.Gen}
