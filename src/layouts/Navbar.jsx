@@ -3,9 +3,17 @@ import { Link, useLocation, Outlet } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
 import ProflileImg from "../assets/avatar1.jpg";
 
-const NavItem = ({ to, children }) => {
+const NavItem = ({ to, children, activePaths = [] }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  const currentPath = location.pathname;
+  
+  const isActive = activePaths.length
+  ? activePaths.some((path) =>
+      path === "/"
+        ? currentPath === "/"
+        : currentPath.startsWith(path)
+    )
+  : currentPath === to;
 
   const listStyleMenu =
     "block py-2 px-3 text-gray-900 rounded-sm md:p-0 md:dark:hover:text-blue-500";
@@ -87,7 +95,7 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <Link to = "/login" className={listStyleProfile}>
+                    <Link to="/login" className={listStyleProfile}>
                       Sign Out
                       <span className="float-right">
                         <GoSignOut />
@@ -132,7 +140,7 @@ const Navbar = () => {
               id="navbar-user"
             >
               <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-500 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white  dark:border-gray-700">
-                <NavItem to="/">Home</NavItem>
+                <NavItem to="/" activePaths={[ '/','/schedule']}>Home</NavItem> 
                 <NavItem to="/myschedule">My Schedule</NavItem>
                 <NavItem to="/request">Request</NavItem>
               </ul>

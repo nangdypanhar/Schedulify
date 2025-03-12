@@ -1,10 +1,11 @@
-
 import React, { useEffect, useState } from "react";
 import Table from "../../components/ScheduleTable";
 import { fetchSchedule } from "../../service/ScheduleData";
+import { useNavigate } from "react-router-dom";
 
 const SchedulePage = () => {
   const [schedule, setSchedule] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchSchedule().then(setSchedule).catch(console.error);
@@ -28,6 +29,14 @@ const SchedulePage = () => {
 
   return (
     <main className="max-w-screen-xl mx-auto p-4 flex flex-col gap-7 mt-5">
+      <span>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-gray-500"
+        >
+          &lt; Back 
+        </button>
+      </span>
       <h1 className="text-3xl font-bold">Schedule</h1>
       <Table headers={headers} rows={schedule} />
       <h2 className="text-2xl font-medium">Today's Classes:</h2>

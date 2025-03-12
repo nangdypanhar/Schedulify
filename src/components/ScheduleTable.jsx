@@ -11,7 +11,7 @@ const Table = ({ headers, rows }) => {
 
   return (
     <div className="relative overflow-x-auto shadow-md">
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <table className="w-full text-sm text-left text-gray-500">
         <thead>
           <tr>{headers.map((header, index) => <TableHead key={index}>{header}</TableHead>)}</tr>
         </thead>

@@ -42,7 +42,7 @@ const Homepage = () => {
       </div>
       
 
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 place-items-center">
+      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-15 place-items-center">
         {homeData.map((schedule) => (
           <Card
             key={schedule.id}
