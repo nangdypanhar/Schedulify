@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 const Card = ({ gen, specialize, group }) => {
   return (
-    <div className="w-[370px] h-[200px] shadow-md rounded-md p-4 relative">
+    <div className="w-[370px] h-[200px] shadow-md rounded-md p-4 relative hover:shadow-xl hover:border-2 hover:border-[#284BAD] transition-all duration-100">
       <p className="text-lg font-semibold">
         Generation: {gen < 10 ? `0${gen}` : gen}
       </p>
