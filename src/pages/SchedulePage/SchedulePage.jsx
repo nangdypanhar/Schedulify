@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "../../components/ScheduleTable";
-import { fetchSchedule } from "../../service/ScheduleData";
+import { fetchSchedule } from "../../service/api/ScheduleData";
 import { useNavigate } from "react-router-dom";
 
 const SchedulePage = () => {
