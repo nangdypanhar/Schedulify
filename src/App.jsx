@@ -9,24 +9,58 @@ import { Routes, Route } from "react-router-dom";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 import RequestPage from "./pages/RequestPage/RequestPage.jsx";
 import SchedulePage from "./pages/SchedulePage/SchedulePage.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route element={<Navbar />}>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/myschedule" element={<MySchedulePage />} />
-          <Route path="/request" element={<RequestPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="/schedule" element={<SchedulePage />} />
-        </Route>
+    <Routes>
+      <Route element={<Navbar />}>
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Homepage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <PrivateRoute>
+              <AboutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/myschedule"
+          element={
+            <PrivateRoute>
+              <MySchedulePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/request"
+          element={
+            <PrivateRoute>
+              <RequestPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/schedule"
+          element={
+            <PrivateRoute>
+              <SchedulePage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-      </Routes>
-    </>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+    </Routes>
   );
 }
 
