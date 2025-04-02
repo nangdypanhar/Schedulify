@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Table from "../../components/ScheduleTable";
-import { fetchSchedule } from "../../service/api/ScheduleData";
+import { fetchSchedule } from "../../core/api/ScheduleData";
 
 const MySchedulePage = () => {
   const [schedule, setSchedule] = useState([]);
