@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import { GoSignOut } from "react-icons/go";
 import ProflileImg from "../assets/avatar1.jpg";
-import { useAuth } from "../service/contexts/AuthContext";
+import { useAuth } from "../core/contexts/AuthContext";
 
 const NavItem = ({ to, children, activePaths = [] }) => {
   const location = useLocation();
@@ -85,7 +85,7 @@ const Navbar = () => {
                     {auth.user.name}
                   </span>
                   <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                  {auth.user.email}
+                    {auth.user.email}
                   </span>
                 </div>
                 <ul className="py-2">
@@ -95,7 +95,11 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <Link to="/login" className={listStyleProfile} onClick={auth.logout}>
+                    <Link
+                      to="/login"
+                      className={listStyleProfile}
+                      onClick={auth.logout}
+                    >
                       Sign Out
                       <span className="float-right">
                         <GoSignOut />

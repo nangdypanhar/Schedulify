@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../../components/Card";
-import { fetchHomepage } from "../../service/api/HomepageData";
+import { fetchHomepage } from "../../core/api/HomepageData";
 import { useState, useEffect } from "react";
 
 const Homepage = () => {
