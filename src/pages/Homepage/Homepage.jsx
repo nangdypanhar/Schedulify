@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../../components/Card";
 import { fetchHomepage } from "../../core/api/HomepageData";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../core/contexts/AuthContext";
+import { useAuth } from "../../service/contexts/AuthContext";
 
 const Homepage = () => {
   const [homeData, setHomeData] = useState([]);
