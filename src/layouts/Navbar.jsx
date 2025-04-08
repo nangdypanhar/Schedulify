@@ -90,11 +90,6 @@ const Navbar = () => {
                 </div>
                 <ul className="py-2">
                   <li>
-                    <a href="#" className={listStyleProfile}>
-                      Appearance
-                    </a>
-                  </li>
-                  <li>
                     <Link
                       to="/login"
                       className={listStyleProfile}
