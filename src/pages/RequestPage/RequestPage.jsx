@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { fetchAvailableRooms } from "../../core/api/AvailableRoom";
-import { RequestModal } from "./local component/RequestModal";
+import { RequestModal } from "./local_component/RequestModal";
 import { useAuth } from "../../core/contexts/AuthContext";
 import { submitRoomRequest } from "../../core/api/RequestRoom";
 import { fetchRequestHistory } from "../../core/api/RequestHistory";
 import { fetchCourse } from "../../core/api/CourseData";
-import { TableSkeleton } from "./local component/TableSkeleton";
+import { TableSkeleton } from "./local_component/TableSkeleton";
 
 const RequestPage = () => {
   const [rooms, setRooms] = useState([]);

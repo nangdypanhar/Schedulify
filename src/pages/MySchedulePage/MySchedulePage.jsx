@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Table from "../../components/ScheduleTable";
-import { fetchSchedule } from "../../core/api/ScheduleData";
+import MyScheduleTable from "./MyScheduleTable";
+import { fetchMySchedule } from "../../core/api/MyScheduleData";
+import { useAuth } from "../../core/contexts/AuthContext";
+import { TableSkeleton } from "../RequestPage/local_component/TableSkeleton";
 
 const MySchedulePage = () => {
+  const { auth } = useAuth();
   const [schedule, setSchedule] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSchedule().then(setSchedule).catch(console.error);
-  }, []);
+    fetchMySchedule(auth.token)
+      .then((data) => setSchedule(data))
+      .catch(console.error)
+      .finally(() => setTimeout(() => setLoading(false), 2000));
+  }, [auth.token]);
 
   const headers = [
     "Time",
@@ -17,49 +24,123 @@ const MySchedulePage = () => {
     "Thursday",
     "Friday",
   ];
-  const today = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-    new Date()
-  );
 
-  const convertTo24Hour = (time) => {
-    const [hour, minute] = time.split(/:| /);
-    let formattedHour = parseInt(hour, 10);
-    if (time.includes("PM") && formattedHour !== 12) formattedHour += 12;
-    if (time.includes("AM") && formattedHour === 12) formattedHour = 0;
-    return formattedHour * 60 + parseInt(minute, 10);
+  const organizeScheduleByDay = (scheduleData) => {
+    const days = {
+      monday: [],
+      tuesday: [],
+      wednesday: [],
+      thursday: [],
+      friday: [],
+    };
+
+    scheduleData.forEach((entry) => {
+      const day = entry.day.toLowerCase();
+      if (days[day]) days[day].push(entry);
+    });
+
+    return days;
   };
 
-  const todaySchedule = schedule
-    .map((row) => row[today])
-    .filter(Boolean)
-    .sort(
-      (a, b) =>
-        convertTo24Hour(a.time.split(" - ")[0]) -
-        convertTo24Hour(b.time.split(" - ")[0])
+  const isInTimeSlot = (start_time, end_time, timeSlot) => {
+    const toMinutes = (time) => {
+      const [h, m] = time.split(":").map(Number);
+      return h * 60 + m;
+    };
+
+    const [slotStart, slotEnd] = timeSlot.split(" - ").map(toMinutes);
+    const start = toMinutes(start_time);
+    const end = toMinutes(end_time);
+
+    return (
+      (start <= slotStart && end >= slotStart) ||
+      (start <= slotEnd && end >= slotEnd)
     );
+  };
+
+  const daysSchedule = organizeScheduleByDay(schedule);
+
+  const timeSlots = [
+    "08:30 - 10:00",
+    "10:15 - 11:45",
+    "13:00 - 14:30",
+    "14:45 - 16:15",
+  ];
+
+  const tableRows = timeSlots.map((slot) => {
+    const row = [<p className="text-center">{slot}</p>];
+
+    headers.slice(1).forEach((day) => {
+      const entry = daysSchedule[day.toLowerCase()]?.find((cls) =>
+        isInTimeSlot(cls.start_time, cls.end_time, slot)
+      );
+
+      row.push(
+        entry ? (
+          <div className="flex flex-col items-center">
+            <span>{entry.course}</span>
+            <span className="text-xs text-gray-600">Room {entry.room}</span>
+          </div>
+        ) : (
+          <p className="text-center text-slate-400 italic">No class</p>
+        )
+      );
+    });
+
+    return row;
+  });
+
+  // Map JS getDay() to your schedule format
+  const dayMap = {
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+  };
+
+  const today = new Date().getDay();
+  const todayKey = dayMap[today];
+
+  const todaysSchedule = schedule
+    .filter((entry) => entry.day.toLowerCase() === todayKey)
+    .sort((a, b) => a.start_time.localeCompare(b.start_time));
 
   return (
     <main className="max-w-screen-xl mx-auto p-4 flex flex-col gap-7 mt-5">
       <h1 className="text-3xl font-bold">My Schedule</h1>
-      <Table headers={headers} rows={schedule} />
-      <h2 className="text-2xl font-medium">Today's Classes:</h2>
-      <ul className="list-disc pl-5">
-        {todaySchedule.length > 0 ? (
-          todaySchedule.map((entry, index) => (
-            <li key={index}>
-              {entry.subject}, at{" "}
-              {entry.room ? (
-                `Room ${entry.room}`
-              ) : (
-                <span className="text-red-400">N / A</span>
-              )}{" "}
-              ({entry.time})
-            </li>
-          ))
-        ) : (
-          <li>No schedule for today</li>
-        )}
-      </ul>
+      {loading ? (
+        <TableSkeleton />
+      ) : (
+        <MyScheduleTable headers={headers} rows={tableRows} />
+      )}
+
+      {!loading && (
+        <>
+          <h1 className="text-xl font-bold mt-6">Today's Schedule:</h1>
+          <ul className="list-disc list-inside space-y-1 pl-4">
+            {todaysSchedule.length > 0 ? (
+              todaysSchedule.map((entry, index) => (
+                <li key={index}>
+                  <span className="font-medium">{entry.course}</span>, at{" "}
+                  {entry.room ? (
+                    <span className="text-gray-700">Room {entry.room}</span>
+                  ) : (
+                    <span className="text-red-400 italic">N / A</span>
+                  )}{" "}
+                  (
+                  <span className="text-sm text-gray-600">
+                    {entry.start_time} - {entry.end_time}
+                  </span>
+                  )
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-500 italic">No schedule for today 🎉</li>
+            )}
+          </ul>
+        </>
+      )}
     </main>
   );
 };
