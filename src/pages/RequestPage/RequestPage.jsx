@@ -40,11 +40,46 @@ const RequestPage = () => {
     return `${weekday} ${day}, ${time}`;
   }
 
+  const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const timeSlots = [
+    "08:30 AM - 10:00 AM",
+    "10:15 AM - 11:45 AM",
+    "01:00 PM - 02:30 PM",
+    "02:45 PM - 04:15 PM",
+  ];
+
+  const [roomTimes, setRoomTimes] = useState(() => {
+    const stored = localStorage.getItem("roomMockTimes");
+    return stored ? JSON.parse(stored) : {};
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const rooms = await fetchAvailableRooms(auth.token);
         const activeRooms = rooms.filter((room) => room.is_active !== 0);
+
+        const updatedMockTimes = { ...roomTimes };
+        let changed = false;
+
+        activeRooms.forEach((room) => {
+          if (!updatedMockTimes[room.id]) {
+            const day = weekdays[Math.floor(Math.random() * weekdays.length)];
+            const time =
+              timeSlots[Math.floor(Math.random() * timeSlots.length)];
+            updatedMockTimes[room.id] = { day, time };
+            changed = true;
+          }
+        });
+
+        if (changed) {
+          localStorage.setItem(
+            "roomMockTimes",
+            JSON.stringify(updatedMockTimes)
+          );
+          setRoomTimes(updatedMockTimes);
+        }
+
         setRooms(activeRooms);
       } catch (error) {
         console.error("Failed to fetch rooms:", error);
@@ -66,7 +101,7 @@ const RequestPage = () => {
 
       setTimeout(() => {
         setLoading(false);
-      }, 2000); 
+      }, 2000);
     };
 
     fetchData();
@@ -124,12 +159,12 @@ const RequestPage = () => {
             </tr>
           </thead>
           <tbody>
-            {rooms.map((room, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+            {rooms.map((room) => (
+              <tr key={room.id} className="hover:bg-gray-50">
                 <td className="px-4 py-2 border">{room.name}</td>
                 <td className="px-4 py-2 border">{room.capacity}</td>
                 <td className="px-4 py-2 border">
-                  Wednesday, 09:00 AM - 10:15 AM
+                  {roomTimes[room.id]?.day}, {roomTimes[room.id]?.time}
                 </td>
                 <td className="px-4 py-2 border">
                   <button
@@ -177,7 +212,7 @@ const RequestPage = () => {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border">{data.room_name}</td>
                   <td className="px-4 py-2 border">
-                    {formatCustomDate(data.requested_date)}
+                    {formatCustomDate(data.created_at)}
                   </td>
                   <td className="px-4 py-2 border">
                     <span className={statusStyles[data.status]}>

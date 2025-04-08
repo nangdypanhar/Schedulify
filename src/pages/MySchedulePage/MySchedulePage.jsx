@@ -11,8 +11,11 @@ const MySchedulePage = () => {
 
   useEffect(() => {
     fetchMySchedule(auth.token)
-      .then((data) => setSchedule(data))
-      .catch(console.error)
+      .then((data) => setSchedule(data || []))
+      .catch((err) => {
+        console.error(err);
+        setSchedule([]);
+      })
       .finally(() => setTimeout(() => setLoading(false), 2000));
   }, [auth.token]);
 
@@ -26,6 +29,8 @@ const MySchedulePage = () => {
   ];
 
   const organizeScheduleByDay = (scheduleData) => {
+    if (!scheduleData || scheduleData.length === 0) return {};
+
     const days = {
       monday: [],
       tuesday: [],
@@ -35,11 +40,20 @@ const MySchedulePage = () => {
     };
 
     scheduleData.forEach((entry) => {
-      const day = entry.day.toLowerCase();
+      const day = entry.day?.toLowerCase();
       if (days[day]) days[day].push(entry);
     });
 
     return days;
+  };
+
+  const formatToAMPM = (time) => {
+    const [hour, minute] = time.split(":").map(Number);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const adjustedHour = hour % 12 === 0 ? 12 : hour % 12;
+    return `${adjustedHour.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${ampm}`;
   };
 
   const isInTimeSlot = (start_time, end_time, timeSlot) => {
@@ -58,8 +72,6 @@ const MySchedulePage = () => {
     );
   };
 
-  const daysSchedule = organizeScheduleByDay(schedule);
-
   const timeSlots = [
     "08:30 - 10:00",
     "10:15 - 11:45",
@@ -67,8 +79,15 @@ const MySchedulePage = () => {
     "14:45 - 16:15",
   ];
 
+  const daysSchedule = organizeScheduleByDay(schedule);
+
   const tableRows = timeSlots.map((slot) => {
-    const row = [<p className="text-center">{slot}</p>];
+    const [start, end] = slot.split(" - ");
+    const row = [
+      <p className="text-center">
+        {formatToAMPM(start)} - {formatToAMPM(end)}
+      </p>,
+    ];
 
     headers.slice(1).forEach((day) => {
       const entry = daysSchedule[day.toLowerCase()]?.find((cls) =>
@@ -79,10 +98,10 @@ const MySchedulePage = () => {
         entry ? (
           <div className="flex flex-col items-center">
             <span>{entry.course}</span>
-            <span className="text-xs text-gray-600">Room {entry.room}</span>
+            <span className="text-xs text-gray-60 font-medium">Room {entry.room}</span>
           </div>
         ) : (
-          <p className="text-center text-slate-400 italic">No class</p>
+          <p className=" italic font-medium">No class</p>
         )
       );
     });
@@ -90,7 +109,6 @@ const MySchedulePage = () => {
     return row;
   });
 
-  // Map JS getDay() to your schedule format
   const dayMap = {
     1: "monday",
     2: "tuesday",
@@ -103,14 +121,17 @@ const MySchedulePage = () => {
   const todayKey = dayMap[today];
 
   const todaysSchedule = schedule
-    .filter((entry) => entry.day.toLowerCase() === todayKey)
+    .filter((entry) => entry.day?.toLowerCase() === todayKey)
     .sort((a, b) => a.start_time.localeCompare(b.start_time));
 
   return (
     <main className="max-w-screen-xl mx-auto p-4 flex flex-col gap-7 mt-5">
       <h1 className="text-3xl font-bold">My Schedule</h1>
+
       {loading ? (
         <TableSkeleton />
+      ) : schedule.length === 0 ? (
+        <li className="text-gray-500 italic"> No schedule found 📭</li>
       ) : (
         <MyScheduleTable headers={headers} rows={tableRows} />
       )}
@@ -122,12 +143,12 @@ const MySchedulePage = () => {
             {todaysSchedule.length > 0 ? (
               todaysSchedule.map((entry, index) => (
                 <li key={index}>
-                  <span className="font-medium">{entry.course}</span>, at{" "}
-                  {entry.room ? (
-                    <span className="text-gray-700">Room {entry.room}</span>
+                  <span className="font-medium mx-1">{entry.course}</span>, at  
+                    {entry.room ? (
+                    <span className="text-gray-700 font-medium mx-1">Room {entry.room}</span>
                   ) : (
                     <span className="text-red-400 italic">N / A</span>
-                  )}{" "}
+                  )}
                   (
                   <span className="text-sm text-gray-600">
                     {entry.start_time} - {entry.end_time}
